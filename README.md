@@ -18,12 +18,20 @@ This program is licensed under the **GNU Affero General Public License v3.0**.
 - Python 3.12
 
 ### Clone the Repository
-#### It will install `ivcalc` in `/usr/local/bin` ( Assuming it is in your `$PATH`)
 ```sh
 git clone https://github.com/dasprosad/ivcalc.git
 cd ivcalc
+```
+### Installation
+It will install `ivcalc` in `/usr/local/bin` ( Assuming it is in your `$PATH`)
+```sh
 make install
 ```
+or, to a custom path
+```sh
+make install INSTALL_DIR=/path/to/custom/directory
+```
+
 ## Usage
 
 ### Run the Script Directly

@@ -61,14 +61,44 @@ ivcalc \
 
 ## Example Output
 ```
-Stock Cas uM: 6.25
-Stock DNA uM: 0.33
-Stock sgRNA uM: 62.50
-IVC DNA uM: 0.5
-IVC Cas uM: 0.75
-IVC sgRNA uM: 1.5
-...
-Total Volume: 20.00 μL
+Stock Cas uM:  6250.0
+Stock DNA uM:  0.2525124993687188
+Stock sgRNA uM:  2.589399000491986
+IVC DNA uM:  0.0025251249936871878
+IVC Cas uM : 0.0037876874905307814
+IVC sgRNA uM:  0.007575374981061563
+Assembly Cas uM 0.03787687490530781
+
+Cas volume required for assembly is less than 0.5 uL: 0.0001 uL
+Dilution of the stock is required!
+
+Dilution of Cas Protein:
+----------------------------------------
+     10X rCutSmart Buffer:   1.00 μL
+           Cas from stock:   0.00 μL
+       Nuclease-free dH2O:   9.00 μL
+----------------------------------------
+             Total Volume:  10.00 μL
+
+
+RNP Assembly Reaction Components:
+----------------------------------------
+     10X rCutSmart Buffer:   1.00 μL
+        Cas from Dilution:   1.00 μL
+                    sgRNA:   0.29 μL
+       Nuclease-free dH2O:   7.71 μL
+----------------------------------------
+             Total Volume:  10.00 μL
+
+
+IVC Reaction Components:
+----------------------------------------
+     10X rCutSmart Buffer:   2.00 μL
+            Substrate DNA:   0.20 μL
+   RNP from Assembly rxn.:   2.00 μL
+       Nuclease-free dH2O:  15.80 μL
+----------------------------------------
+             Total Volume:  20.00 μL
 ```
 
 ## Contributing

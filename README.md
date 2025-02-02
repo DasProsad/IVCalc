@@ -18,7 +18,7 @@ This program is licensed under the **GNU Affero General Public License v3.0**.
 
 ### Clone the Repository
 ```sh
-git clone https://github.com/yourusername/ivcalc.git
+git clone https://github.com/dasprosad/ivcalc.git
 cd ivcalc
 ```
 ## Usage

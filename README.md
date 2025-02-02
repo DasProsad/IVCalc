@@ -1,4 +1,4 @@
-# CRISPR-Cas9 IVC Reaction Calculator (IVCalc)
+# ✂️🧬 CRISPR-Cas9 IVC Reaction Calculator (IVCalc)
 
 ## Overview
 The **CRISPR-Cas9 IVC Reaction Calculator (IVCalc)** is a command-line tool designed to calculate reaction mix components for an *in vitro* CRISPR-Cas9 reaction. It computes the molarities of Cas9, sgRNA, and substrate DNA, ensuring accurate preparation of reaction mixtures.
@@ -13,16 +13,16 @@ This program is licensed under the **GNU Affero General Public License v3.0**.
 
 ## Installation
 
-### Prerequisites
+### 0️⃣ Prerequisites
 - UNIX-like os
 - Python 3.12
 
-### Clone the Repository
+### 1️⃣ Clone the Repository
 ```sh
 git clone https://github.com/dasprosad/ivcalc.git
 cd ivcalc
 ```
-### Installation
+### 2️⃣ Install
 It will install `ivcalc` in `/usr/local/bin` ( Assuming it is in your `$PATH`)
 ```sh
 make install
@@ -32,7 +32,7 @@ or, to a custom path
 make install INSTALL_DIR=/path/to/custom/directory
 ```
 
-## Usage
+## 🏁 Usage
 ```sh
 ivcalc \
     --rnp_ratio 1.5 \

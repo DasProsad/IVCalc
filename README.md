@@ -14,6 +14,7 @@ This program is licensed under the **GNU Affero General Public License v3.0**.
 ## Installation
 
 ### Prerequisites
+- UNIX-like os
 - Python 3.12
 
 ### Clone the Repository

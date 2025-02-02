@@ -14,20 +14,13 @@ This program is licensed under the **GNU Affero General Public License v3.0**.
 ## Installation
 
 ### Prerequisites
-- Python 3.x
+- Python 3.12
 
 ### Clone the Repository
 ```sh
 git clone https://github.com/yourusername/ivcalc.git
 cd ivcalc
 ```
-
-### Create a Standalone `.pyz` Archive
-If you want a single-file executable:
-```sh
-python -m zipapp . -o ivcalc.pyz
-```
-
 ## Usage
 
 ### Run the Script Directly
@@ -42,11 +35,6 @@ python ivcalc.py \
     --sub_stock 500.0 \
     --sgrna_len 0.1 \
     --sgrna_stock 100.0
-```
-
-### Run the `.pyz` File
-```sh
-python ivcalc.pyz --help
 ```
 
 ## Command-line Arguments

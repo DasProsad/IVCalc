@@ -25,7 +25,7 @@ cd ivcalc
 
 ### Run the Script Directly
 ```sh
-python ivcalc.py \
+ivcalc \
     --rnp_ratio 1.5 \
     --ivc_vol 20.0 \
     --final_sub_mass 100.0 \

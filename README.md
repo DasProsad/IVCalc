@@ -17,15 +17,17 @@ This program is licensed under the **GNU Affero General Public License v3.0**.
 - Python 3.12
 
 ### Clone the Repository
+#### It will install `ivcalc` in `/usr/local/bin` ( Assuming it is in your `$PATH`)
 ```sh
 git clone https://github.com/dasprosad/ivcalc.git
 cd ivcalc
+make install
 ```
 ## Usage
 
 ### Run the Script Directly
 ```sh
-ivcalc \
+python3 ./ivcalc \
     --rnp_ratio 1.5 \
     --ivc_vol 20.0 \
     --final_sub_mass 100.0 \

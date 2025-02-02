@@ -46,7 +46,7 @@ ivcalc \
     --sgrna_stock 100.0
 ```
 
-## Command-line Arguments
+## 🖥️ Command-line Arguments
 | Argument | Description |
 |----------|-------------|
 | `--rnp_ratio` | RNP times substrate concentration |
@@ -74,8 +74,8 @@ Total Volume: 20.00 μL
 ## Contributing
 Feel free to fork this repository and submit pull requests.
 
-## Author
+## 🧌 Author
 **Prosad Kumar Das**
 
-## License
+## 🪨 License
 [GNU AGPL v3.0](https://www.gnu.org/licenses/agpl-3.0.html)

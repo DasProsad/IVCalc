@@ -36,7 +36,7 @@ make install INSTALL_DIR=/path/to/custom/directory
 
 ### Run the Script Directly
 ```sh
-python3 ./ivcalc \
+ivcalc \
     --rnp_ratio 1.5 \
     --ivc_vol 20.0 \
     --final_sub_mass 100.0 \

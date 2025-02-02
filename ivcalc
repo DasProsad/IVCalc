@@ -1,0 +1,177 @@
+#!/usr/bin/env python3
+
+"""
+CRISPR-Cas9 IVC Reaction Calculator (IVCalc)
+
+Copyright (C) 2025 Prosad Kumar Das
+
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU Affero General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU Affero General Public License for more details.
+
+You should have received a copy of the GNU Affero General Public License
+along with this program. If not, see <https://www.gnu.org/licenses/>.
+"""
+
+import argparse
+
+def dna_molarity(length: int, conc: float) -> float:
+	"""
+	Calculates the molarity of double-stranded substrate DNA in uM.
+
+	Parameters:
+	- length: Length of the substrate DNA in Kbp.
+	- conc: Concentration of substrate DNA in ng/uL.
+
+	Returns:
+	- molarity: Molarity of DNA in uM.
+	"""
+
+	MW_PER_BASEPAIR = 607.4 # Avg. molecular weight per basepair in Daltons
+	TERMINAL_5PHOSPHATE = 157.9 # Molecular weight of 5'-phosphate group in Daltons
+	mw = (length * MW_PER_BASEPAIR) + TERMINAL_5PHOSPHATE
+	molarity = (conc / mw )
+	return molarity
+
+def sgrna_molarity(length: int, conc: float) -> float:
+	"""
+	Calculates the molarity of single-stranded sgRNA in uM.
+
+	Parameters:
+	- length: Length of the sgRNA in Kbp.
+	- conc: Concentration of sgRNA in ng/uL.
+
+	Returns:
+	- molarity: Molarity of sgRNA in uM.
+	"""
+
+	MW_PER_NUCLEOTIDE = 320.5 # Avg. molecular weight per nucleotide in Daltons
+	TERMINAL_5PHOSPHATE = 159.0 # Molecular weight of 5'-phosphate group in Daltons
+	mw = (length * 1000 * MW_PER_NUCLEOTIDE) + TERMINAL_5PHOSPHATE
+	molarity = (conc / mw) * 1000
+	return molarity
+
+def cas_molarity(mw: float, conc: float) -> float:
+	"""
+	Calculates molarity of Cas protein in uM.
+
+	Parameters:
+	- mw: Molecular weight of Cas protein in kilo Daltons (kDa)
+	- conc: Concentration of Cas9 in ng/uL.
+
+	Returns:
+	- molarity: Molarity of Cas protein in uM.
+	"""
+
+	molarity = (conc / mw ) * 1000
+	return molarity
+
+if __name__ == "__main__":
+	parser = argparse.ArgumentParser(description = "CRISPR-Cas9 IVC Reaction Calculator (IVCalc) v0.1")
+	parser.add_argument("-n", "--rnp_ratio", type = float, default = 0.0, required = True, help = "RNP times substrate conc.")
+	parser.add_argument("-v","--ivc_vol", type = float, default = 0.0, required = True, help = "Volume of IVC reaction in uL")
+	parser.add_argument("-a","--final_sub_mass", type = float, default = 0.0, required = True, help = "Amount of substrate DNA in ng for IVC reaction")
+	parser.add_argument("-cw","--cas_mw", type = float, default = 0.0, required = True, help = "Molecular weight of Cas in kDa")
+	parser.add_argument("-c","--cas_stock",type = float, default = 0.0, required = True, help = "Stock conc. of Cas protein in ng/uL")
+	parser.add_argument("-dl","--dna_len", type = float, default = 0, required = True, help = "Length of substrate DNA in Kbp")
+	parser.add_argument("-d","--sub_stock", type = float, default = 0.0, required = True, help = "Stock conc. of DNA substrate in ng/uL")
+	parser.add_argument("-rl","--sgrna_len", type = float, default = 0, required = True, help = "Length of sgRNA in Kbp")
+	parser.add_argument("-r", "--sgrna_stock", type = float, default = 0.0, required = True, help = "Stock conc. of sgRNA in ng/uL")
+
+	args = parser.parse_args()
+
+	ivc_vol: float = args.ivc_vol
+
+	stock_sub_molarity = dna_molarity(length = args.dna_len, conc = args.sub_stock)
+	stock_cas_molarity = cas_molarity(mw = args.cas_mw, conc = args.cas_stock)
+	print("Stock Cas uM: ", stock_cas_molarity)
+	print("Stock DNA uM: ", stock_sub_molarity)
+	stock_sgrna_molarity = sgrna_molarity(length = args.sgrna_len, conc = args.sgrna_stock)
+	print("Stock sgRNA uM: ", stock_sgrna_molarity)
+
+	final_sub_molarity = dna_molarity(length = args.dna_len, conc = (args.final_sub_mass / ivc_vol))
+	print("IVC DNA uM: ", final_sub_molarity)
+	final_cas_molarity = args.rnp_ratio * final_sub_molarity
+	print("IVC Cas uM :", final_cas_molarity)
+	final_sgrna_molarity = 2 * final_cas_molarity
+	print("IVC sgRNA uM: ", final_sgrna_molarity)
+	final_sub_vol = (ivc_vol * final_sub_molarity) / stock_sub_molarity
+	final_rnp_vol_to_ivc = 2.0
+
+	assembly_vol = 10.0
+	assembly_cas_molarity = (final_cas_molarity * ivc_vol) / final_rnp_vol_to_ivc
+	print("Assembly Cas uM", assembly_cas_molarity)
+	assembly_cas_vol_from_stock = (assembly_cas_molarity * assembly_vol) / stock_cas_molarity
+	assembly_sgrna_molarity = 2 * assembly_cas_molarity
+	assembly_sgrna_vol_from_stock = (assembly_sgrna_molarity * assembly_vol) / stock_sgrna_molarity
+
+	assembly_mix = {
+		"10X rCutSmart Buffer": assembly_vol / 10.0,
+		"Cas9 Enzyme": assembly_cas_vol_from_stock,
+		"sgRNA": assembly_sgrna_vol_from_stock,
+		"Nuclease-free dH2O": assembly_vol - ((assembly_vol / 10.0) + assembly_cas_vol_from_stock + assembly_sgrna_vol_from_stock),
+		}
+
+	ivc_mix = {
+		"10X rCutSmart Buffer": ivc_vol / 10.0,
+		"Substrate DNA": final_sub_vol,
+		"RNP from Assembly rxn.": final_rnp_vol_to_ivc,
+		"Nuclease-free dH2O": ivc_vol - ((ivc_vol / 10.0) + final_sub_vol + final_rnp_vol_to_ivc),
+	}
+
+	if assembly_cas_vol_from_stock < 0.5:
+		print(f"\nCas volume required for assembly is less than 0.5 uL: {assembly_cas_vol_from_stock:.4f} uL")
+		print("Dilution of the stock is required!")
+
+		assembly_cas_vol_from_dil = 1.0
+		dil_vol = 10.0
+		dil_cas_molarity = (assembly_cas_molarity * assembly_vol) / assembly_cas_vol_from_dil
+		dil_cas_volume_from_stock = (dil_cas_molarity * dil_vol) / stock_cas_molarity
+
+		dilution_mix = {
+			"10X rCutSmart Buffer": dil_vol / 10.0,
+			"Cas from stock": dil_cas_volume_from_stock,
+			"Nuclease-free dH2O": dil_vol - ((dil_vol / 10.0) + dil_cas_volume_from_stock),
+		}
+
+		assembly_mix = {
+		"10X rCutSmart Buffer": assembly_vol / 10.0,
+		"Cas from Dilution": assembly_cas_vol_from_dil,
+		"sgRNA": assembly_sgrna_vol_from_stock,
+		"Nuclease-free dH2O": 10.0 - ((assembly_vol / 10.0) + assembly_cas_vol_from_dil + assembly_sgrna_vol_from_stock),
+		}
+
+		print("\nDilution of Cas Protein:")
+		print("----------------------------------------")
+		for component, volume in dilution_mix.items():
+			print(f"{component:>25}: {volume:6.2f} μL")
+		print("----------------------------------------")
+		print(f"{'Total Volume':>25}: {dil_vol:6.2f} μL\n")
+
+		print("\nRNP Assembly Reaction Components:")
+		print("----------------------------------------")
+		for component, volume in assembly_mix.items():
+			print(f"{component:>25}: {volume:6.2f} μL")
+		print("----------------------------------------")
+		print(f"{'Total Volume':>25}: {assembly_vol:6.2f} μL\n")
+
+	else:
+		print("\nRNP Assembly Reaction Components:")
+		print("----------------------------------------")
+		for component, volume in assembly_mix.items():
+			print(f"{component:>25}: {volume:6.2f} μL")
+		print("----------------------------------------")
+		print(f"{'Total Volume':>25}: {assembly_vol:6.2f} μL\n")
+
+	print("\nIVC Reaction Components:")
+	print("----------------------------------------")
+	for component, volume in ivc_mix.items():
+		print(f"{component:>25}: {volume:6.2f} μL")
+	print("----------------------------------------")
+	print(f"{'Total Volume':>25}: {ivc_vol:6.2f} μL\n")

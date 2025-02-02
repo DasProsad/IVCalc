@@ -33,8 +33,6 @@ make install INSTALL_DIR=/path/to/custom/directory
 ```
 
 ## Usage
-
-### Run the Script Directly
 ```sh
 ivcalc \
     --rnp_ratio 1.5 \
